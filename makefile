@@ -15,9 +15,9 @@ test_%: test_%.cpp %.h
 
 .PHONY: clean
 clean:
-	echo rm -f *.o $(TEST_FILES:%.cpp=%)
+	rm -f *.o $(TEST_FILES:%.cpp=%)
 
 .PHONY: test
 test:
-	make clean
-	$(foreach test, $(TEST_FILES:%.cpp=%), make $(test);)
+	@make clean
+	@$(foreach test, $(TEST_FILES:%.cpp=%), make $(test);)
