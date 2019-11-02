@@ -12,7 +12,7 @@ void test_empty_Node(void) {
 void test_initialized_Node(void) {
     TPRINT(__func__);
     NodeType<int>* deleteme = new NodeType<int> (1);
-    assert(deleteme->getdata() == 1);
+    assert(deleteme->component == 1);
 }
 
 int main(void) {

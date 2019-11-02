@@ -20,4 +20,4 @@ clean:
 .PHONY: test
 test:
 	@make clean
-	@$(foreach test, $(TEST_FILES:%.cpp=%), make $(test);)
+	@$(foreach test, $(TEST_FILES:%.cpp=%), make --no-print-directory $(test);)

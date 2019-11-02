@@ -1,4 +1,5 @@
 #include "LList.h"
+//#include "Edge.h"
 #include "Vertex.h"
 #include "test.h"
 
@@ -8,36 +9,36 @@ void test_Empty_Init(void) {
     TPRINT(__func__);
     Vertex_T<int> asdf;
     asdf.value = 1;
-    asdf.edges = new LList<int>;
+    asdf.marked = false; 
     assert(asdf.value == 1);
-    assert(asdf.edges->IsEmpty());
+    assert(!asdf.marked);
 }
 
 void test_Half_Init(void) {
     TPRINT(__func__);
     Vertex_T<int> asdf(1);
-    asdf.edges = new LList<int>;
+    asdf.marked = false;
     assert(asdf.value == 1);
-    assert(asdf.edges->IsEmpty());
+    assert(!asdf.marked);
 }
 
 void test_Full_Init(void) {
     TPRINT(__func__);
-    LList<int>* edgesPtr = new LList<int>;
-    Vertex_T<int> asdf(1, edgesPtr);
+    LList<int>* markedPtr = new LList<int>;
+    Vertex_T<int> asdf(1, markedPtr);
     assert(asdf.value == 1);
-    assert(asdf.edges->IsEmpty());
 }
 
 void test_LList_of_Vertices(void) {
     TPRINT(__func__);
     LList< Vertex_T <int> > listoverts;
-    Vertex_T <int>* vertex_a = new Vertex_T<int>(1);
+    Vertex_T <int>* vertex_a = new Vertex_T<int>(1, true);
+    Vertex_T <int>* vertex_b = new Vertex_T<int>(2, true);
     listoverts.Insert(*vertex_a);
+    listoverts.Insert(*vertex_b);
     Vertex_T <int> comeback;
     listoverts.RemoveFirst(comeback);
-    assert(comeback.value == 1);
-    assert(comeback.edges == NULL);
+    assert((comeback.value == 1) && comeback.marked);
 }
 
 void test_Comparisons(void) {
@@ -59,7 +60,7 @@ void test_Comparisons(void) {
 }
 
 int main(void) {
-   cout << "Testing ValueType.h" << endl;
+   cout << "Testing Vertex.h" << endl;
    test_Empty_Init();
    test_Half_Init();
    test_Full_Init();

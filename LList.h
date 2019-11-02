@@ -118,6 +118,25 @@ public:
     throw NotFound();
   }
 
+  NodeType<ItemType>* GetHead(void) {
+      return head;
+  }
+
+  NodeType<ItemType>* GetNodePtr(NodeType<ItemType> Node) {
+    bool isEnd = false;
+    NodeType<ItemType> *listnode = head;
+    while (!isEnd) {
+      if (listnode->component == Node->component) {
+        return listnode;
+      } else if (listnode->nextNode == NULL) {
+        isEnd = true;
+      } else {
+        listnode = listnode->nextNode;
+      }
+    }
+    throw NotFound();
+  }
+
   // Removes item from the list
   // Precondition: item is in list
   // Postcondition: first occurrence of item is no longer
