@@ -1,25 +1,43 @@
 //a driver for testing of the LList class
 
 #include "LList.h"
+#include "Vertex.h"
 #include <iostream>
 #include <fstream>
+#include "test.h"
 
 using namespace std;
 
 LList<int> alist;
 
+void test_Get_and_GetPtr(void) {
+	TPRINT(__func__);
+	LList < Vertex_T <int> > list;
+	list.Insert(Vertex_T<int>(0));
+	Vertex_T<int> *vertex;
+	vertex = list.GetPtr(Vertex_T<int>(0));
+	vertex->marked = true;
+	Vertex_T<int> newvertex;
+	newvertex = list.Get(Vertex_T<int>(0));
+	assert(newvertex.marked);
+}
+
+void test_Insert_Remove_asFirst(void) {
+	TPRINT(__func__);
+	alist.InsertasFirst(3);
+	int returnval;
+	alist.RemoveFirst(returnval);
+
+	assert(returnval == 3);
+}
+
 int main()
 {
-	cout<<"starting: \nadding first item:\n";
-	alist.InsertasFirst(3);
 
-	int item;
-	
 	cout<<"testing insert function:\n";
 	for(int i=0; i<=6; i++)
 	{
-		item=i;
-		alist.Insert(item);
+		alist.Insert(i);
 	}
 	alist.Print();
 
@@ -40,11 +58,7 @@ int main()
 	alist.Print();
 	
 	cout<<"testing removal of entire list:\n";
-	for(int i=1; i<6; i++)
-	{
-		item=i;
-		alist.Delete(item);
-	}
+	alist.MakeEmpty();
 	alist.Print();
 	
 
@@ -54,4 +68,6 @@ int main()
 	alist.Print();
 	alist.Insert(4);
 	alist.Print();
+
+	test_Get_and_GetPtr();
 }

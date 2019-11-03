@@ -118,6 +118,21 @@ public:
     throw NotFound();
   }
 
+  /*ItemType* GetPtr(ItemType item) {
+    bool isEnd = false;
+    NodeType<ItemType> *listnode = head;
+    while (!isEnd) {
+      if (listnode->component == item) {
+        return &listnode->component;
+      } else if (listnode->nextNode == NULL) {
+        isEnd = true;
+      } else {
+        listnode = listnode->nextNode;
+      }
+    }
+    throw NotFound();
+  }*/
+
   NodeType<ItemType>* GetHead(void) {
       return head;
   }
@@ -183,6 +198,8 @@ public:
 
   // Destructor
   // Postcondition: List destroyed
-  ~LList() {}
+  ~LList() {
+  MakeEmpty();
+  }
 };
 #endif

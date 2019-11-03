@@ -3,7 +3,7 @@
 
 #include "Vertex.h"
 #include <cstddef>
-
+template <class ValueType> class Vertex_T;
 template <class ValueType> class Edge_T {
 public:
   ValueType weight;
@@ -28,6 +28,8 @@ public:
     fromVertex = fromPtr;
     toVertex = toPtr;
   }
+
+  ~Edge_T(){};
 
   bool operator<(Edge_T const &obj) { return (weight < obj.weight); }
 
