@@ -1,5 +1,6 @@
 #Makefile for graphs assignment 19
 CXX=clang++
+EXECUTER = "./"
 
 TEST_FILES=$(wildcard test_*.cpp)
 CXX_FLAGS=-Wall -Wextra -Wpedantic -std=c++98
@@ -9,7 +10,7 @@ graph_driver:  graph_driver.o LList.h NodeType.h Vertex.h
 
 test_%: test_%.cpp
 	$(CXX) $(CXX_FLAGS) -g $^ -o $@
-	valgrind --tool=memcheck --leak-check=yes --show-reachable=yes --num-callers=20 --track-fds=yes ./test_$*
+	@$(EXECUTER)test_$*
 
 %.o: %.cpp %.h
 	$(CXX) $(CXX_FLAGS) -c -g $^
@@ -22,3 +23,7 @@ clean:
 test:
 	@make clean
 	@$(foreach test, $(TEST_FILES:%.cpp=%), make --no-print-directory $(test);)
+
+.PHONY: test
+vtest:
+	make test EXECUTER="valgrind --tool=memcheck --leak-check=yes --show-reachable=yes --num-callers=20 --track-fds=yes ./"

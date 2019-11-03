@@ -1,10 +1,10 @@
-
+#include "LList.h"
 //*******  queue.h header **********
 
 template <class ItemType> class Queue
 {
   private:
-    ItemType* items;			// Queue items
+    LList<ItemType> *items;			// Queue items
     int maxQue;			// Max number of queue items + 1
     int front;
 //int front;			// Index of element before the front of queue
@@ -16,25 +16,24 @@ template <class ItemType> class Queue
   maxQue = -1;			// Want a queue which stores 500 elements
   front = maxQue - 1;		// front == rear implies Empty
   rear = maxQue -1;
-  items = new ItemType[maxQue];	// Allocate array for queue
+  items = new LList<ItemType>();	// Allocate array for queue
 } // End Queue::Queue()
     Queue(int max)			// Parameterized constructor
 {
   maxQue = max + 1;			// Want a queue which stores max elements
   front = maxQue - 1;		// front == rear implies Empty
   rear = maxQue -1;
-  items = new ItemType[maxQue];	// Allocate array for queue
+  items = new LList<ItemType>();	// Allocate array for queue
 } // End Queue::Queue(…)
 
     ~Queue()			// Destructor
 {
-  delete [] items;			// Deallocate the queue array
+  delete items;			// Deallocate the queue array
 } // End Queue::~Queue()
 
     void MakeEmpty()		// Initialize queue to empty
 {
-  front = maxQue - 1;
-  rear = maxQue -1;
+	items->MakeEmpty();
 } // Queue::MakeEmpty()
 
     bool IsEmpty() const		// Determine if queue is empty
@@ -44,34 +43,48 @@ template <class ItemType> class Queue
 
     bool IsFull() const		// Determine if queue is full
 {
-  return ((rear + 1) % maxQue == front);
+	if( maxQue > 0 ){
+	  return ((rear + 1) % maxQue == front);
+	} else {
+		// If maxQue < 0, then there is no size limit
+		return false;
+	}
 } // End Queue::IsFull()
 
     void Enqueue(ItemType newItem)	// Add item to rear of queue
 {				// Precondition:  queue NOT full
-  rear = (rear+1) % maxQue;
-  items[rear] = newItem;
+	if( maxQue > 0 ){
+	  rear = (rear+1) % maxQue;
+	} else { rear++; }
+
+	items->InsertasLast(newItem);
 } // End Queue::Enqueue(…)
 
     void Dequeue(ItemType& item)	// Remove item from front of queue
 {				// Precondition:  queue NOT empty
+	if (maxQue > 0) {
   front = (front + 1) % maxQue;
-  item = items[front];
+	} else { front++; }
+
+	items->RemoveFirst(item);
 } // End Queue::Dequque(…)
 
     void jump_the_queue(ItemType newItem)
 {
   				// Precondition: queue NOT empty
- items[front] = newItem;
+	items->InsertasFirst(newItem);
+	if (maxQue > 0) {
  front -= 1;
   if (front < 0){
 	front += maxQue;
   }
+	} else { rear++;}
 }
 
-    char Front()
+    ItemType Front()
 {
-  return(items[front]);
+	NodeType<ItemType> *head = items->GetHead();
+	return head->component;
 }
 };
 

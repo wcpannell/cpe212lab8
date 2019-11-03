@@ -51,6 +51,24 @@ public:
     head = tempPtr;
   }
 
+  void InsertasLast(ItemType item) {
+	  if (IsEmpty()) {
+		  Insert(item);
+	  } else {
+		  NodeType<ItemType> *tempPtr = new NodeType<ItemType>(item);
+		  NodeType<ItemType> *currentNodePtr = head;
+		  while (true) {
+			  if (currentNodePtr->nextNode != NULL) {
+				  currentNodePtr = currentNodePtr->nextNode;
+			  } else {
+				  break;
+			  }
+		  }
+		  currentNodePtr->nextNode = tempPtr;
+	  }
+  }
+
+
   // checks if item exists in list
   bool IsDuplicate(ItemType item) {
       try {

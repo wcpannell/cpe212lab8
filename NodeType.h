@@ -15,6 +15,8 @@ public:
     component = inputData;
     nextNode = NULL;
   }
-  ~NodeType() {}
+  ~NodeType() {
+  //delete component;
+  }
 };
 #endif

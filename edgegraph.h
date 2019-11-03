@@ -76,6 +76,8 @@ public:
     fromVertexPtr->edges->Insert(newEdge);
   }*/
 
+  /** Add edge (by pointers)
+   */
   void AddEdge(
 		  Vertex_T<VertexType> *fromVertex,
 		  Vertex_T<VertexType> *toVertex,
@@ -84,9 +86,13 @@ public:
 		  new Edge_T<VertexType>(inWeight, fromVertex, toVertex);
 	  edges->Insert(newEdge);
       fromVertex->edges->Insert(newEdge);
+	  fromVertex->numEdges++;
       toVertex->edges->Insert(newEdge);
+	  toVertex->numEdges++;
   }
 
+  /** Add edge by searching for vertices by value
+   */
   void AddEdge(VertexType fromVertexValue, VertexType toVertexValue, VertexType weight) {
     Edge_T<VertexType> *newEdge = new Edge_T<VertexType>(weight);
 
@@ -99,7 +105,9 @@ public:
 
 	  edges->Insert(newEdge);
       fromVertex->edges->Insert(newEdge);
+	  fromVertex->numEdges++;
       toVertex->edges->Insert(newEdge);
+	  toVertex->numEdges++;
 
     } catch (NotFound) {
       cout << "a VertexValue was not found in vertices" << endl;
@@ -127,15 +135,30 @@ public:
   }
   */
 
-  void GetToVertices(VertexType vertex, Queue<Vertex_T<VertexType> > &adjVertices) {
-    NodeType<Edge_T<VertexType> > *currentNodePtr =
-        vertices->Get(vertex).edges->GetHead();
+  void GetToVertices(VertexType vertex, Queue<Vertex_T<VertexType>* > &adjVertices) {
+    Vertex_T<VertexType> *vertexPtr = GetVertexByValue(vertex);
+	GetToVertices(vertexPtr, adjVertices);
+  }
+
+  void GetToVertices(Vertex_T<VertexType> *vertexPtr, Queue<Vertex_T<VertexType>* > &adjVertices) {
+	NodeType<Edge_T<VertexType>* > *currentNodePtr =
+        vertexPtr->edges->GetHead();
+
+	// Iterate over each edge in list
     bool isEnd = false;
     while (!isEnd) {
-      if ((currentNodePtr->component->toVertex != NULL) &&
-          !adjVertices.IsFull()) {
-        adjVertices.Enqueue(currentNodePtr->component->toVertex);
-      } else if (currentNodePtr->nextNode == NULL) {
+		if (vertexPtr == currentNodePtr->component->fromVertex) {
+		  if ((currentNodePtr->component->toVertex != NULL) &&
+			  !adjVertices.IsFull()) {
+			adjVertices.Enqueue(currentNodePtr->component->toVertex);
+		  }
+		} else if (vertexPtr == currentNodePtr->component->toVertex) {
+		  if ((currentNodePtr->component->fromVertex != NULL) &&
+			  !adjVertices.IsFull()) {
+			adjVertices.Enqueue(currentNodePtr->component->fromVertex);
+		  }
+		}
+	  if (currentNodePtr->nextNode == NULL) {
         isEnd = true;
       } else {
         currentNodePtr = currentNodePtr->nextNode;
@@ -193,9 +216,46 @@ public:
 	*/
   }
 
+  Vertex_T<VertexType> *GetVertexByMostEdges(void) {
+	  NodeType<Vertex_T<VertexType> *> *currentNodePtr = vertices->GetHead();
+	  if (currentNodePtr == NULL) { throw NotFound(); }
+	  Vertex_T<VertexType> *greatest = currentNodePtr->component;
+	  bool isEnd = false;
+
+	  while (!isEnd) {
+		  if (currentNodePtr->component->numEdges > greatest->numEdges) {
+			  greatest = currentNodePtr->component;
+		  }
+		  if (currentNodePtr->nextNode == NULL) {
+			  isEnd = true;
+		  } else {
+			  currentNodePtr = currentNodePtr->nextNode;
+		  }
+	  }
+	  return greatest;
+  }
+
+  Vertex_T<VertexType> *GetVertexByLeastEdges(void) {
+	  NodeType<Vertex_T<VertexType> *> *currentNodePtr = vertices->GetHead();
+	  if (currentNodePtr == NULL) { throw NotFound(); }
+	  Vertex_T<VertexType> *least = currentNodePtr->component;
+	  bool isEnd = false;
+
+	  while (!isEnd) {
+		  if (currentNodePtr->component->numEdges < least->numEdges) {
+			  least = currentNodePtr->component;
+		  }
+		  if (currentNodePtr->nextNode == NULL) {
+			  isEnd = true;
+		  } else {
+			  currentNodePtr = currentNodePtr->nextNode;
+		  }
+	  }
+	  return least;
+  }
 
   void ClearMarks() {
-    NodeType<Vertex_T<VertexType> > *currentNodePtr = vertices->GetHead();
+    NodeType<Vertex_T<VertexType>* > *currentNodePtr = vertices->GetHead();
     bool isEnd = false;
     while (!isEnd) {
       currentNodePtr->component->marked = false;
@@ -209,15 +269,25 @@ public:
 
   void MarkVertex(VertexType vertex) {
     Vertex_T<VertexType> *foundVertex;
-    foundVertex = vertices->GetPtr(vertex);
-    foundVertex->component->marked = true;
+    foundVertex = GetVertexByValue(vertex);
+    foundVertex->marked = true;
+  }
+
+  void MarkVertex(Vertex_T<VertexType> *vertex) {
+    vertex->marked = true;
   }
 
   bool IsMarked(VertexType vertex) {
-    Vertex_T<VertexType> foundVertex = vertices->Get(vertex);
-    return foundVertex.marked;
+    Vertex_T<VertexType> *foundVertex = GetVertexByValue(vertex);
+    return foundVertex->marked;
   }
-  /* out of scope for assignment, update later
+
+  bool IsMarked(Vertex_T<VertexType> *vertex) {
+	  return vertex->marked;
+  }
+
+  /* These are out of scope for the assignment.
+   * Fix later
   // Assumes VertexType is a type for which the "==" and "<<"
   // operators are defined
     void DepthFirstSearch(GraphType<VertexType> graph, VertexType startVertex,
@@ -225,7 +295,7 @@ public:
   {
     using namespace std;
     Stack stack;
-    Queue vertexQ;
+    Queue<Vertex_T<int>* > vertexQ;
 
     bool found = false;
     VertexType vertex;
@@ -263,7 +333,8 @@ public:
   }
 
   // Assumption: VertexType is a type for which the "==" and "<<" operators
-  are defined. void BreadthFirstSearch(GraphType<VertexType> graph, VertexType
+  //are defined.
+  void BreadthFirstSearch(GraphType<VertexType> graph, VertexType
   startVertex, VertexType endVertex)
   {
     using namespace std;

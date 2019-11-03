@@ -13,24 +13,32 @@ public:
   ValueType value;
   bool marked;
   LList< Edge_T<ValueType>* > *edges;
+  int numEdges;
 
-  Vertex_T() { marked = false; }
+  Vertex_T() {
+	  marked = false;
+	  numEdges = 0;
+      edges = new LList< Edge_T<ValueType>* >();
+  }
 
   Vertex_T(ValueType inputData) {
     value = inputData;
     marked = false;
+	numEdges = 0;
     edges = new LList< Edge_T<ValueType>* >();
   }
 
   Vertex_T(ValueType inputData, bool inputMark) {
     value = inputData;
     marked = inputMark;
+	numEdges = 0;
     edges = new LList< Edge_T<ValueType>* >();
   }
 
-  Vertex_T(ValueType inputData, bool inputMark, LList< Edge_T<ValueType>* >* inputedges) {
+  Vertex_T(ValueType inputData, bool inputMark, int inputNumEdges, LList< Edge_T<ValueType>* >* inputedges) {
     value = inputData;
     marked = inputMark;
+	numEdges = inputNumEdges;
     edges = inputedges;
   }
 

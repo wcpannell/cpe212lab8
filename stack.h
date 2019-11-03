@@ -1,30 +1,68 @@
 //*******  stack.h Standard Header Information Here **********
+#include "LList.h"
 
-//const int MAX_SIZE = 100;		// Maximum stack size 
-const int MAX_SIZE = 3;			// Maximum stack size for testing throw
-typedef char ItemType;
-class Stack			// Array-based Stack class
+template <class ItemType> class Stack			// Array-based Stack class
 {
  private:
-  ItemType data[MAX_SIZE];		// Head of linked list
-  int top;			// Top of stack indicator
+	 int MAX_SIZE;
+  LList<ItemType> *data;		// Head of linked list
+  int item_count;
 
  public:
-  Stack();			// Default constructor
-  				// Postcondition: Empty stack created
+  // Default constructor
+  // Postcondition: Empty stack created
+  Stack(){
+	  MAX_SIZE = -1;
+	  data = new LList<ItemType>;
+  }
+  Stack(int max_size){
+	  MAX_SIZE = max_size;
+	  data = new LList<ItemType>;
+  }
 
-  bool IsEmpty() const;		// Checks to see if stack is empty
-				// Postcondition: Returns TRUE if empty, FALSE otherwise
+  // Checks to see if stack is empty
+  // Postcondition: Returns TRUE if empty, FALSE otherwise
+  bool IsEmpty() const {
+	  return data->IsEmpty();
+  }
 
-  bool IsFull() const;		// Checks to see if stack is full
-				// Postcondition: Returns TRUE if full, FALSE otherwise
+  // Checks to see if stack is full
+  // Postcondition: Returns TRUE if full, FALSE otherwise
+  bool IsFull() const {
+	  if (MAX_SIZE > 0){
+		  return item_count == MAX_SIZE;
+	  } else {
+		  return false;
+	  }
+  }
 
-  void Push(ItemType item);		// Adds item to top of stack
+  // Adds item to top of stack
+  void Push(ItemType item) {
+	  data->InsertasFirst(item);
+	  item_count++;
+  }
 
-  void Pop();			// Removes top item from stack
+  // Removes top item from stack
+  void Pop(ItemType &item) {
+	  data->RemoveFirst(item);
+	  item_count--;
+  }
 
-  ItemType Top() const;		// Returns a copy of top item on stack
-				// Postcondition: item still on stack, copy returned
+  // Returns a copy of top item on stack
+  // Postcondition: item still on stack, copy returned
+  ItemType Top() const {
+	  NodeType<ItemType> *nodePtr;
+	  nodePtr = data->GetHead();
+	  return nodePtr->component;
+  }
 
-  void MakeEmpty();			// Removes all items from stack
+  // Removes all items from stack
+  void MakeEmpty() {
+	  data->MakeEmpty();
+  }
+
+  ~Stack(void) {
+	  MakeEmpty();
+	  delete data;
+  }
 };
