@@ -1,11 +1,11 @@
 #Makefile for graphs assignment 19
-CXX=clang++
+#CXX=clang++
 EXECUTER = "./"
 
 TEST_FILES=$(wildcard test_*.cpp)
 CXX_FLAGS=-Wall -Wextra -Wpedantic -std=c++98
 
-graph_driver:  graph_driver.o LList.h NodeType.h Vertex.h
+graph_driver:  graph_driver.o LList.h NodeType.h Vertex.h Edge.h edgegraph.h stack.h queue.h
 	$(CXX) $(CXX_FLAGS) $^ -o $@
 
 test_%: test_%.cpp

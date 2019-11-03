@@ -71,13 +71,17 @@ public:
 
   // checks if item exists in list
   bool IsDuplicate(ItemType item) {
-      try {
-         Get(item);
-      }
-      catch (NotFound) {
-          return false;
-      }
-      return true;
+	  if (IsEmpty()){
+		  return false;
+	  } else {
+		  try {
+			 Get(item);
+		  }
+		  catch (NotFound) {
+			  return false;
+		  }
+		  return true;
+	  }
   }
 
   // Adds item to correct place in list

@@ -20,12 +20,13 @@ template <class VertexType>
 // defined
 class GraphType {
 private:
-  int numVertices;
-  int maxVertices; ///< -1 means no limit
   LList<Vertex_T<VertexType>* > *vertices;
   LList<Edge_T<VertexType>* > *edges;
 
 public:
+  int numVertices;
+  int maxVertices; ///< -1 means no limit
+
   GraphType() {
     numVertices = 0;
     maxVertices = -1;
@@ -58,12 +59,27 @@ public:
   // Post: Vertex has been stored in vertices.
   //       numVertices has been incremented.
   void AddVertex(Vertex_T<VertexType> *vertex) {
-    if ((numVertices < maxVertices) || (maxVertices < 0)) {
-      vertices->Insert(vertex);
-      numVertices++;
-    } else {
-      throw(GraphFull());
-    }
+		if (!IsDuplicateVertex(vertex)) {
+			if ((numVertices < maxVertices) || (maxVertices < 0)) {
+				//Unsorted
+				vertices->InsertasFirst(vertex);
+				numVertices++;
+			} else {
+			  throw(GraphFull());
+			}
+		}
+  }
+
+  void AddVertex(VertexType vertex) {
+		if (!IsDuplicateVertex(vertex)) {
+			if ((numVertices < maxVertices) || (maxVertices < 0)) {
+				//unsorted
+			  vertices->InsertasFirst(new Vertex_T<VertexType>(vertex));
+			  numVertices++;
+			} else {
+			  throw(GraphFull());
+			}
+		}
   }
 
   /*// Post: Edge (fromVertex, toVertex) is stored in edges.
@@ -84,10 +100,10 @@ public:
           VertexType inWeight) {
 	  Edge_T<VertexType>* newEdge =
 		  new Edge_T<VertexType>(inWeight, fromVertex, toVertex);
-	  edges->Insert(newEdge);
-      fromVertex->edges->Insert(newEdge);
+	  edges->InsertasFirst(newEdge);
+      fromVertex->edges->InsertasFirst(newEdge);
 	  fromVertex->numEdges++;
-      toVertex->edges->Insert(newEdge);
+      toVertex->edges->InsertasFirst(newEdge);
 	  toVertex->numEdges++;
   }
 
@@ -169,16 +185,20 @@ public:
   Vertex_T<VertexType> *GetVertexByValue(VertexType value) {
 	  NodeType<Vertex_T<VertexType>* > *currentNodePtr = vertices->GetHead();
     bool isEnd = false;
-    while (!isEnd) {
-      if (currentNodePtr->component->value == value) {
-		  return currentNodePtr->component;
-	  } else if (currentNodePtr->nextNode == NULL) {
-        isEnd = true;
-      } else {
-        currentNodePtr = currentNodePtr->nextNode;
-      }
-    }
-    throw NotFound();
+	if (!vertices->IsEmpty()) {
+		while (!isEnd) {
+		  if (currentNodePtr->component->value == value) {
+			  return currentNodePtr->component;
+		  } else if (currentNodePtr->nextNode == NULL) {
+			isEnd = true;
+		  } else {
+			currentNodePtr = currentNodePtr->nextNode;
+		  }
+		}
+	} else {
+		throw NotFound();
+	}
+	throw NotFound();
   }
 
   Edge_T<VertexType> *GetEdgeByVerticesValue(VertexType vertex1value, VertexType vertex2value) {
@@ -285,6 +305,19 @@ public:
   bool IsMarked(Vertex_T<VertexType> *vertex) {
 	  return vertex->marked;
   }
+
+	bool IsDuplicateVertex(VertexType vertex){
+		  try {
+			  GetVertexByValue(vertex);
+		  } catch(NotFound) {
+			  return false;
+		  }
+		  return true;
+	}
+
+	bool IsDuplicateVertex(Vertex_T<VertexType> *vertex) {
+		return IsDuplicateVertex(vertex->value);
+	}
 
   /* These are out of scope for the assignment.
    * Fix later
