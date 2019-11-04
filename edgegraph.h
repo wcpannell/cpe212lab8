@@ -57,16 +57,15 @@ public:
   bool IsFull() const { return numVertices == maxVertices; }
 
   // Post: Vertex has been stored in vertices.
+  //	no duplicate check. check yourself.
   //       numVertices has been incremented.
   void AddVertex(Vertex_T<VertexType> *vertex) {
-		if (!IsDuplicateVertex(vertex)) {
-			if ((numVertices < maxVertices) || (maxVertices < 0)) {
-				//Unsorted
-				vertices->InsertasFirst(vertex);
-				numVertices++;
-			} else {
-			  throw(GraphFull());
-			}
+		if ((numVertices < maxVertices) || (maxVertices < 0)) {
+			//Unsorted
+			vertices->InsertasFirst(vertex);
+			numVertices++;
+		} else {
+		  throw(GraphFull());
 		}
   }
 
@@ -107,6 +106,15 @@ public:
 	  toVertex->numEdges++;
   }
 
+  void AddEdgeWoEdgelistUndirected(
+		  Vertex_T<VertexType> *fromVertex,
+		  Vertex_T<VertexType> *toVertex,
+          VertexType inWeight) {
+	  Edge_T<VertexType>* newEdge =
+		  new Edge_T<VertexType>(inWeight, fromVertex, toVertex);
+      fromVertex->edges->InsertasFirst(newEdge);
+	  fromVertex->numEdges++;
+  }
   /** Add edge by searching for vertices by value
    */
   void AddEdge(VertexType fromVertexValue, VertexType toVertexValue, VertexType weight) {

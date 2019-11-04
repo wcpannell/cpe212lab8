@@ -95,6 +95,15 @@ void test_MakeEmpty_and_Clean(void) {
 	delete graph; // calls MakeEmpty in Destructor.
 }
 
+void test_undirected(void) {
+	Vertex_T<int> *fromVertex = new Vertex_T<int>(777);
+	Vertex_T<int> *toVertex= new Vertex_T<int>(888);
+	graph->AddVertex(fromVertex);
+	graph->AddVertex(toVertex);
+	graph->AddEdgeWoEdgelistUndirected(fromVertex, toVertex, 20);
+	assert(fromVertex->numEdges == 1);
+	assert(toVertex->numEdges == 0);
+}
 
 
 
@@ -109,6 +118,7 @@ int main(void) {
 	test_GetToVertices();
 	test_marks();
 	test_get_vertex_by_numEdges();
+	test_undirected();
 	test_MakeEmpty_and_Clean();
     return 0;
 }
