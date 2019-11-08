@@ -5,7 +5,7 @@
 
 using namespace std;
 
-void test_Empty_Init(void) {
+/*void test_Empty_Init(void) {
   TPRINT(__func__);
   Edge_T<int> asdf;
   asdf.weight = 1;
@@ -48,7 +48,7 @@ void test_LList_of_Edges(void) {
   assert(comeback.weight == 1);
   assert(comeback.fromVertex->value == 1);
   assert(comeback.toVertex->value == 2);
-}
+}*/
 
 void test_Comparisons(void) {
   TPRINT(__func__);
@@ -68,7 +68,7 @@ void test_Comparisons(void) {
   assert(b == temp);
 }
 
-void test_Vertex_comparison_from_LList(void) {
+/*void test_Vertex_comparison_from_LList(void) {
   TPRINT(__func__);
   LList< Edge_T<int> > edgeList;
   Vertex_T<int> *fromVertexPtr = new Vertex_T<int>(1);
@@ -85,16 +85,16 @@ void test_Vertex_comparison_from_LList(void) {
   comeback = listoverts.Get(Vertex_T<int>(1));
 
   assert(edgeList.Get(*vertex_a) == comeback);
-}
+}*/
 
 int main(void) {
   cout << "Testing Edge.h" << endl;
-  test_Empty_Init();
+  /*test_Empty_Init();
   test_Half_Init();
   test_Full_Init();
-  test_LList_of_Edges();
+  test_LList_of_Edges();*/
   test_Comparisons();
-  test_Vertex_comparison_from_LList();
+  //test_Vertex_comparison_from_LList();
 
   return 0;
 }

@@ -7,26 +7,19 @@ template <class ValueType> class Vertex_T;
 template <class ValueType> class Edge_T {
 public:
   ValueType weight;
-  Vertex_T<ValueType> *fromVertex;
-  Vertex_T<ValueType> *toVertex;
+  ValueType fromVertex;
+  ValueType toVertex;
 
   Edge_T() {
     weight = 0;
-    fromVertex = NULL;
-    toVertex = NULL;
+    fromVertex = 0;
+    toVertex = 0;
   }
 
-  Edge_T(ValueType inWeight) {
-    weight = inWeight;
-    fromVertex = NULL;
-    toVertex = NULL;
-  }
-
-  Edge_T(ValueType inWeight, Vertex_T<ValueType> *fromPtr,
-         Vertex_T<ValueType> *toPtr) {
-    weight = inWeight;
-    fromVertex = fromPtr;
-    toVertex = toPtr;
+  Edge_T(ValueType infromVertex, ValueType intoVertex, ValueType inWeight){
+	  weight = inWeight;
+	  fromVertex = infromVertex;
+	  toVertex = intoVertex;
   }
 
   ~Edge_T(){};
